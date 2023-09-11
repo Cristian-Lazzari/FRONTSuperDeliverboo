@@ -1,11 +1,16 @@
 <script>
 import axios from 'axios';
 import { state } from '../state';
+import AppFilter from '../components/AppFilter.vue';
 export default {
+  components: {
+    AppFilter,
+  },
   
   data() {
     return {
         state,
+        categoriesId: null,
         arrCategories: [],
         arrRestaurants: [],
         selectedCategories: [],
@@ -42,18 +47,26 @@ export default {
       console.log(this.state.selectedRestaurant)
       this.getSingleRestaurant(id);
     },
+    manageChangeCategories(categoriesId) {
+			this.categoriesId = categoriesId;
+			this.getRestaurants();
+		},
 
   },
 }
 
+
 </script>
 
 <template>
-  <div v-for="item in arrCategories" :key="item.id">
+  <!-- <div v-for="item in arrCategories" :key="item.id">
     <div>
       {{ item.title }}
     </div>
-  </div>
+  </div> -->
+  <AppFilter :categories="arrCategories"
+  @changeCategories="manageChangeCategories($event)"
+  />
   
 
   <div class="card-container">
