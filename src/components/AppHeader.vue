@@ -27,7 +27,7 @@
     <div class="jumbo">
         <div class="title">
             <div class="fr-title">Delive<span class="color">boo</span></div>
-            <div class="sc-title color">Il gusto a portata di <span class="click">click!</span> </div>
+            <div class="sc-title ">Il gusto a portata di <span class="click">click!</span> </div>
   
         </div>
         <div class="side-menu">
@@ -58,10 +58,24 @@
 <style lang="scss" scoped>
 @use '../assets/styles/general.scss' as *;
 
-.color{
-  color: rgb(20, 20, 104);
+.color {
+    color: rgb(20, 20, 104);
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
 }
 
+.color:hover {
+    animation: rotate360 2s linear;
+}
+
+@keyframes rotate360 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 .title{
   margin-left: -180px;
 }
