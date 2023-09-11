@@ -156,9 +156,9 @@
 @use '../assets/styles/general.scss' as *;
 
 button{
-  background-color: black;
-  border: 2px solid white;
-  color: white;
+  background-color: rgb(12, 12, 60);
+  border: 2px solid yellow;
+  color: rgb(12, 12, 60);
   padding: 7px;
   border-radius: 10px
 }
@@ -170,7 +170,7 @@ button{
   .item{
     @include dfc;
     gap: 1rem;
-    border: 2px solid rgb(214, 214, 214);
+    border: 2px solid yellow;
     padding: 1rem;
     width: 450px;
   }
@@ -188,7 +188,7 @@ button{
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border: 2px white solid;
+      border: 2px yellow;
       padding: 1rem;
       margin-bottom: 3px;
     }
