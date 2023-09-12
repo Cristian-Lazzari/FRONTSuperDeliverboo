@@ -10,10 +10,43 @@
             state,
             arrCart:[],
             totcart: 0,
+            resturant_id:'',
+            status:'',
+            name:'',
+            surname:'',
+            phone:'',
+            address:'',
+            time:'',
+            colldish:[],
+            success:{},
             
         }
     },
     methods:{
+      sendOrder(){
+      axios
+      .post(this.state.baseUrl + '/orders/store', 
+        {
+          resturant_id: this.resturant_id,
+          status: this.status,
+          name: this.name,
+          surname: this.surname,
+          phone: this.phone,
+          address: this.address,
+          time: this.time,
+          arr_dish: this.colldish
+        } 
+      )
+      .then(response => {  this.succes=response})
+      },
+      nwItemcl(id_dish, quantity_item) {
+        let newitemcl={
+          id_dish,
+          quantity_item
+        }
+        return newitemcl;
+      }
+      ,
       nwItem(title, counter, tprice, price) {
         let newitem={
           title,
@@ -22,20 +55,29 @@
           price: parseInt(price),
         }
         return newitem;
-      }
-      ,
-      addItemToArrCart(t, n, tp){
+      },
+      addUpItem(item){
+        this.colldish.forEach(element => {
+          if(element.id_dish === item.id_dish){
+          element.quantity_item += item.quantity_item
+          }
+        });
+
+      },
+      addItemToArrCart(t, n, tp, id){
         if(n<1){
           console.log('ci hai provato amico')
           return 0;
         }
         let newitem= this.nwItem(t, n, tp);
+        let newitemcl= this.nwItemcl(id, n);
         let checkIsSet = false;
         this.arrCart.forEach(element => {
           if(element.title == newitem.title){ checkIsSet = true }
         });
 
         if(checkIsSet){
+          this.addUpItem(newitemcl)
           this.arrCart.forEach(element => {
             if(element.title == newitem.title){
             
@@ -46,6 +88,7 @@
           });  
         }else{
           this.arrCart.push(newitem);
+          this.colldish.push(newitemcl);
         }
         this.arrCart.forEach(element => {
           console.log(element)
@@ -63,7 +106,7 @@
         });
         return total
       },
-      deleteItemToCart(item, counter){
+      deleteItemToCart(item){
         // if(counter>1){
         //   this.arrCart.forEach(element => {
         //   if(element.title == item){ 
@@ -88,6 +131,7 @@
        .then (response=>{this.state.arrMenu=response.data.restaurant})
       },
      // }
+    
 
       
     },
@@ -105,7 +149,7 @@
     <h5>{{ item.name }}</h5>
     <span>€{{ item.price }}</span>
     
-    <button @click="addItemToArrCart(item.name, 1, totprice(1, item.price), item.price)" > AGGIUNGI </button>
+    <button @click="addItemToArrCart(item.name, 1, totprice(1, item.price), item.id)" > AGGIUNGI </button>
 
   </div>
  </div>
@@ -122,33 +166,43 @@
  </div>
 
 
-<form method="post" action="http://127.0.0.1:8000/api/orders" class="cart">
-  <div v-for="(item, index) in arrCart" >
+<form method="post" @submit.prevent="sendOrder"  class="cart">
+  <div v-for="(item, index) in arrCart" :key="index">
     <div class="row">
       <h3 name="">{{ item.title }}</h3>
-    <h4>€{{ item.totprice }}</h4>
-
-    <span>{{ item.counter }}</span>
-    <button class="mybtn" @click="deleteItemToCart(item.title, item.counter)">ELIMINA</button>
+      <h4>€{{ item.totprice }}</h4>
+      <input v-model="item.id" type="hidden" name="id_dish"><input v-model="item.counter" type="hidden" name="quantity_item">
+      <span>{{ item.counter }}</span>
+      <button class="mybtn" @click="deleteItemToCart(item.title, item.counter)">ELIMINA</button>
     </div>
     
   </div>
   <div class="total">
     il totale è: €
     {{getTotCart()}}
+    <input type="hidden" name="">
   </div>
-  <input name="restaurant_id" type="hidden" v-model="state.arrMenu.user.id">
-  <input name="name" type="text"> <label for="">nome</label> <br>
-  <input name="surname" type="text"> <label for="">cognome</label> <br>
-  <input name="phone" type="text"> <label for="">n.telefono</label> <br>
-  <input name="address" type="text"> <label for="">indirizzo</label> <br>
-  <input name="total_price" type="text"> <label for="">prezzo finale</label> <br>
-  <input name="time" type="text"> <label for="">orario consegna</label> <br>
-  <button class="mybtn">
+
+  
+
+  <input v-model="state.arrMenu.user.id" name="restaurant_id" type="hidden" >
+  <input v-model="name" name="name" type="text"> <label for="">nome</label> <br>
+  <input v-model="surname" name="surname" type="text"> <label for="">cognome</label> <br>
+  <input v-model="phone" name="phone" type="text"> <label for="">n.telefono</label> <br>
+  <input v-model="address" name="address" type="text"> <label for="">indirizzo</label> <br>
+  <input v-model="totcart" name="total_price" type="text"> <label for="">prezzo finale</label> <br>
+  <input v-model="time" name="time" type="text"> <label for="">orario consegna</label> <br>
+  <button type="submit" class="mybtn" >
     Invio
   </button>
 </form>
-
+<div v-for="(item, index) in colldish" :key="index" >
+    <div class="row">
+      <h3 name="">{{ item.id_dish }}</h3> <br>
+      <span>{{ item.quantity_item }}</span>
+    </div>
+    
+  </div>
  
 </template>
 
