@@ -4,7 +4,7 @@ import { reactive } from 'vue';
 export const state = reactive({
     sideMenuValue: 0,
     baseUrl: 'http://127.0.0.1:8000/api',
-    selectedRestaurant:1,
+    selectedRestaurant:2,
     arrMenu: [],
     getImageUrl(image) {
 		return image

@@ -32,7 +32,7 @@
         </div>
         <div class="side-menu">
           <!-- <p class="special"><span> <router-link :to="{ name: 'menu' }" class="nav-link active active-p" >Menu</router-link> </span></p> -->
-            <p><span> <router-link :to="{ name: 'menu' }" class="nav-link active active-p" >menu-ristorante</router-link> </span></p>
+
             <p><span> <router-link :to="{ name: 'home' }" class="nav-link active active-p" >home</router-link> </span></p>
             
             <p><span> <a href="http://127.0.0.1:8000/login">Accedi</a></span></p>

@@ -10,8 +10,7 @@
             state,
             arrCart:[],
             totcart: 0,
-            resturant_id:'',
-            status:'',
+            restaurant_id:'',
             name:'',
             surname:'',
             phone:'',
@@ -24,20 +23,22 @@
     },
     methods:{
       sendOrder(){
-      axios
-      .post(this.state.baseUrl + '/orders/store', 
-        {
-          resturant_id: this.resturant_id,
-          status: this.status,
+        this.colldish=JSON.stringify(this.colldish)
+        console.log(this.colldish)
+      
+        let data={
+          restaurant_id: this.restaurant_id,
           name: this.name,
           surname: this.surname,
           phone: this.phone,
           address: this.address,
           time: this.time,
-          arr_dish: this.colldish
-        } 
-      )
-      .then(response => {  this.succes=response})
+         // arr_dish: this.colldish
+        }
+
+      axios
+      .post(this.state.baseUrl + '/orders', data)
+      .then(response => {  this.success=response});
       },
       nwItemcl(id_dish, quantity_item) {
         let newitemcl={
@@ -128,7 +129,11 @@
         getSingleRestaurant(id) {
 
         axios.get(this.state.baseUrl + '/restaurants/'+id,{})
-       .then (response=>{this.state.arrMenu=response.data.restaurant})
+       .then (response=>{
+        this.state.arrMenu=response.data.restaurant
+        this.restaurant_id=response.data.restaurant.user.id
+      
+      })
       },
      // }
     
@@ -166,7 +171,7 @@
  </div>
 
 
-<form method="post" @submit.prevent="sendOrder"  class="cart">
+<div class="cart">
   <div v-for="(item, index) in arrCart" :key="index">
     <div class="row">
       <h3 name="">{{ item.title }}</h3>
@@ -183,19 +188,16 @@
     <input type="hidden" name="">
   </div>
 
-  
-
-  <input v-model="state.arrMenu.user.id" name="restaurant_id" type="hidden" >
-  <input v-model="name" name="name" type="text"> <label for="">nome</label> <br>
+  <input v-model="restaurant_id" name="restaurant_id" type="hidden" >
+  <input v-model="name" name="name" type="text"> <label for="">nome </label> <br>
   <input v-model="surname" name="surname" type="text"> <label for="">cognome</label> <br>
   <input v-model="phone" name="phone" type="text"> <label for="">n.telefono</label> <br>
   <input v-model="address" name="address" type="text"> <label for="">indirizzo</label> <br>
-  <input v-model="totcart" name="total_price" type="text"> <label for="">prezzo finale</label> <br>
   <input v-model="time" name="time" type="text"> <label for="">orario consegna</label> <br>
-  <button type="submit" class="mybtn" >
+  <button @click="sendOrder()" class="mybtn" >
     Invio
   </button>
-</form>
+</div>
 <div v-for="(item, index) in colldish" :key="index" >
     <div class="row">
       <h3 name="">{{ item.id_dish }}</h3> <br>
